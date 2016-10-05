@@ -1,0 +1,5 @@
+{% if page.url == '/' %}
+  <li class="active"><a href="/" class="active"> Home </a></li>
+{% else %}
+  <li><a href="/"> Home </a></li>
+{% endif %}
