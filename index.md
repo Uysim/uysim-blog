@@ -10,5 +10,6 @@ tagline: Rails developer
     <span class="text-muted">{{ post.date | date_to_string }}&raquo;</span>
   </p>
   <p>{{ post.content | strip_html | truncatewords: 100 }}<a href="{{ BASE_PATH }}{{ post.url }}">Read more</a></p>
+  <hr>
 {% endfor %}
 
