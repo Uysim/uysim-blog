@@ -4,6 +4,9 @@ title: "Git Stash Urgent Fix Not Found"
 category: 
 tags: []
 image: /images/git-stash-urgent-fix-not-found.jpg
+image_width: 698
+image_height: 400
+
 ---
 {% include JB/setup %}
 

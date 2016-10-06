@@ -39,16 +39,7 @@
     <!-- atom & rss feed -->
     <link href="{{ BASE_PATH }}{{ site.JB.atom_path }}" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
     <link href="{{ BASE_PATH }}{{ site.JB.rss_path }}" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
-
-    <meta property="og:title" content="{% if page.title %}{{ page.title | smartify | strip_html | strip_newlines | escape_once }}{% else %}{{ site.name }}{% endif %}">
-    <meta property="og:type" content="{% if page.date %}article{% else %}website{% endif %}">
-    <meta property="og:url" content="{{ page.url | replace:'/index.html','/' | prepend: site.baseurl | prepend: site.url }}">
-    <meta property="og:image" content="{% if page.image %}{{ page.image | prepend: site.baseurl | prepend: site.url }}{% else %}{{ site.logo | prepend: site.baseurl | prepend: site.url }}{% endif %}">
-    {% if page.layout == 'post' %}
-      <meta property="og:description" content="{{page.content | markdownify | strip_html | strip_newlines | truncate: 160 | escape_once}}">
-    {% endif %}
-    <meta property="og:site_name" content="{{ site.name }}">
-    <meta property="og:locale" content="{{ site.locale }}">
+    {% include custom/fb_meta %}
   </head>
   
   <body>
