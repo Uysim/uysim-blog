@@ -25,6 +25,7 @@ We need to index a column when we think that column will use the most for a quer
 Add below code pattern to your migration file in situation you need
 
 When create new table :
+
 ```ruby
 def change
   create_table :table_name do |t|
@@ -34,20 +35,26 @@ def change
   end 
 end
 ```
+
 When add new column to table :
+
 ```ruby
 def change
   add_column :table, :column_name, index: true 
 end
 ```
+
 When index the existing column in table:
+
 ```ruby
 def change
   add_index :table, :column_name 
 end
 ```
 ### When to index?
+
 **Index column performance query the most :**
+
 ```ruby
 class Product < ActiveRecord::Base
   def search(name)
@@ -55,6 +62,7 @@ class Product < ActiveRecord::Base
   end
 end
 ```
+
 The method search in class Product above will often use to searching for products. So when product records grow to more than thousands. And many users do some search at the same time. So app performance will start to slow down a bit as some query will queue. Surely this name column needs to index to decrease search and queue time for each query.
 
 **Index reference column :**
@@ -63,16 +71,21 @@ class Category < ActiveRecord::Base
   has_many :products
 end
 ```
+
 ```ruby
 class Product < ActiveRecord::Base
   belongs_to :category
 end
 ```
+
 To get all product belong to category: 
+
 ```ruby
 category.products
 ```
+
 Rails will produce sql query:
+
 ```ruby
 SELECT "products".* FROM "products" WHERE "products"."category_id" = $1  [["category_id", 1]]
 ```
@@ -81,16 +94,21 @@ As category_id in table products will use for to find products that belong to a 
 **Index column that some gem use the most :**
 
 For my late project my team use geocoder gem to find near user by lat long of the user
+
 ```ruby
 class User < ActiveRecord::Base
   reverse_geocoded_by :lat, :long
 end
 ```
+
 To find nearby user in 25 km we have to do:
+
 ```ruby
 User.near([51.5090970805918, -0.127683585920525], 25, unit: :km)
 ```
+
 Geocoder will produce sql query:
+
 ```ruby
 SELECT users.*, 3958.755864232 * 2 * ASIN(SQRT(POWER(SIN((51.5090970805918 - users.lat) * PI() / 180 / 2), 2) + COS(51.5090970805918 * PI() / 180) * COS(users.lat * PI() / 180) * POWER(SIN((-0.127683585920525 - users.long) * PI() / 180 / 2), 2))) AS distance, MOD(CAST((ATAN2( ((users.long - -0.127683585920525) / 57.2957795), ((users.lat - 51.5090970805918) / 57.2957795)) * 57.2957795) + 360 AS decimal), 360) AS bearing FROM "users" WHERE (users.lat BETWEEN 51.14726762281468 AND 51.87092653836892 AND users.long BETWEEN -0.7090381098032911 AND 0.4536709379622411 AND (3958.755864232 * 2 * ASIN(SQRT(POWER(SIN((51.5090970805918 - users.lat) * PI() / 180 / 2), 2) + COS(51.5090970805918 * PI() / 180) * COS(users.lat * PI() / 180) * POWER(SIN((-0.127683585920525 - users.long) * PI() / 180 / 2), 2)))) BETWEEN 0.0 AND 25)  ORDER BY distance ASC
 ```
